@@ -19,18 +19,18 @@ func main() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello", // name
-		false,   // durable
-		false,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
+		"hello1", // name
+		false,    // durable
+		false,    // delete when unused
+		false,    // exclusive
+		false,    // no-wait
+		nil,      // arguments
 	)
 	if err != nil {
 		log.Fatalf("Failed to declare a queue: %v", err)
 	}
 
-	body := "Hello, World!"
+	body := "Hello from Sender 1!"
 	err = ch.Publish(
 		"",     // exchange
 		q.Name, // routing key
@@ -44,5 +44,5 @@ func main() {
 		log.Fatalf("Failed to publish a message: %v", err)
 	}
 
-	log.Printf(" [x] Sent %s", body)
+	log.Printf("Sender 1 [x] Sent %s", body)
 }

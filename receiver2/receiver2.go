@@ -19,7 +19,7 @@ func main() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello1", // name
+		"hello2", // name
 		false,    // durable
 		false,    // delete when unused
 		false,    // exclusive
@@ -47,10 +47,10 @@ func main() {
 
 	go func() {
 		for d := range msgs {
-			log.Printf("Receiver 1: Received a message: %s", d.Body)
+			log.Printf("Receiver 2: Received a message: %s", d.Body)
 		}
 	}()
 
-	log.Printf("Receiver 1 [*] Waiting for messages. To exit press CTRL+C")
+	log.Printf("Receiver 2 [*] Waiting for messages. To exit press CTRL+C")
 	<-forever
 }

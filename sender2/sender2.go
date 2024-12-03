@@ -19,7 +19,7 @@ func main() {
 	defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello1", // name
+		"hello2", // name
 		false,    // durable
 		false,    // delete when unused
 		false,    // exclusive
@@ -30,27 +30,19 @@ func main() {
 		log.Fatalf("Failed to declare a queue: %v", err)
 	}
 
-	msgs, err := ch.Consume(
-		q.Name, // queue
-		"",     // consumer
-		true,   // auto-ack
-		false,  // exclusive
-		false,  // no-local
-		false,  // no-wait
-		nil,    // args
-	)
+	body := "Hello from Sender 2!"
+	err = ch.Publish(
+		"",     // exchange
+		q.Name, // routing key
+		false,  // mandatory
+		false,  // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        []byte(body),
+		})
 	if err != nil {
-		log.Fatalf("Failed to register a consumer: %v", err)
+		log.Fatalf("Failed to publish a message: %v", err)
 	}
 
-	forever := make(chan bool)
-
-	go func() {
-		for d := range msgs {
-			log.Printf("Receiver 1: Received a message: %s", d.Body)
-		}
-	}()
-
-	log.Printf("Receiver 1 [*] Waiting for messages. To exit press CTRL+C")
-	<-forever
+	log.Printf("Sender 2 [x] Sent %s", body)
 }
