@@ -18,24 +18,25 @@ func main() {
 	}
 	defer ch.Close()
 
-	q, err := ch.QueueDeclare(
-		"queue_2", // queue name
-		false,     // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // no-wait
-		nil,       // arguments
+	err = ch.ExchangeDeclare(
+		"exchange_1", // name
+		"direct",     // type
+		false,        // durable
+		false,        // auto-deleted
+		false,        // internal
+		false,        // no-wait
+		nil,          // arguments
 	)
 	if err != nil {
-		log.Fatalf("Failed to declare a queue: %v", err)
+		log.Fatalf("Failed to declare an exchange: %v", err)
 	}
 
-	body := "Message from Sender 2"
+	body := "Message from Producer 1"
 	err = ch.Publish(
-		"",     // exchange
-		q.Name, // routing key
-		false,  // mandatory
-		false,  // immediate
+		"exchange_1", // exchange
+		"routing_key_1", // routing key
+		false,        // mandatory
+		false,        // immediate
 		amqp.Publishing{
 			ContentType: "text/plain",
 			Body:        []byte(body),
@@ -44,5 +45,5 @@ func main() {
 		log.Fatalf("Failed to publish a message: %v", err)
 	}
 
-	log.Printf("Sender 2 [x] Sent %s", body)
+	log.Printf("Producer 1 [x] Sent %s", body)
 }

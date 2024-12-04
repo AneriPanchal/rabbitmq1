@@ -5,7 +5,7 @@ services:
     image: rabbitmq:management
     container_name: rabbitmq
     ports:
-      - "5672:5672" # RabbitMQ message broker port
+      - "5673:5672" # RabbitMQ message broker port
       - "15672:15672" # RabbitMQ management UI port
     environment:
       RABBITMQ_DEFAULT_USER: guest
